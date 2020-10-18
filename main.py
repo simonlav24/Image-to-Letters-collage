@@ -5,7 +5,6 @@ import pygame
 pygame.init()
 
 pygame.font.init()
-# myfont = pygame.font.Font("fonts\pixelFont.ttf", 20)
 myfont = pygame.font.SysFont('Arial', 72)
 
 image = pygame.image.load("assets/image.jpg")
@@ -21,12 +20,25 @@ result = pygame.Surface(image.get_size())
 used = pygame.Surface(image.get_size())
 
 radius = 10
-letters = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+# letters = ["a", "b", "c", "d", "e", "f", "G", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+# letters += ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+# letters += ["!", "?", "@", "#", "$", "%", "&", "(", ")", "[", "]", "/"]
 
-# for all row:
+# UNIFORM
 for y in range(win_height):
 	for x in range(win_width):
+
+#SPIRAL
+# for t in range(0,10000):
+	# x = int(win_width/2 + 0.05*t*cos(0.5*t))
+	# y = int(win_height/2 + 0.05*t*sin(0.5*t))
 		
+	# if x < 0 or x >= win_width or y < 0 or y >= win_height:
+		# continue
+		
+	# if True:#SPIRAL
+	
 		currentPos = (x,y)
 		draw = True
 		
@@ -36,10 +48,8 @@ for y in range(win_height):
 		
 		currentCol = image.get_at(currentPos)
 		col = currentCol[0]/255
-		# col = 1 - col
-	
-		# can draw?
-		rad = int(radius*col + 2)
+
+		rad = radius*col + 2
 		
 		for i in range(10):
 			checkX = int(currentPos[0] + rad * cos(2*pi*i/10))
@@ -57,14 +67,21 @@ for y in range(win_height):
 			letter = choice(letters)
 			surf = myfont.render(letter, True, currentCol)
 			
-			norm = surf.get_height()/surf.get_width()
+			scale =  max([int(rad*2),1])*2/surf.get_height()
 			
-			surf = pygame.transform.scale(surf, (rad*2, int(rad*2*norm)))
-			surf = pygame.transform.rotate(surf, randint(0, 360))
-			result.blit(surf, (currentPos[0] - surf.get_width()/2, currentPos[1] - surf.get_height()/2))
+			surf = pygame.transform.rotozoom(surf, randint(0,360), scale)
+			result.blit(surf, (currentPos[0] - surf.get_width()//2, currentPos[1] - surf.get_height()//2))
 			
-			# pygame.draw.circle(result, currentCol, currentPos, rad)
-			pygame.draw.circle(used, (255,0,0), currentPos, rad)
+			pygame.draw.circle(used, (255,0,0), currentPos, int(rad))
+			
+			win.blit(result, (0,0)); pygame.display.update()
+			
+		
+		
+		
+
+
+
 
 ################################################################################ Main Loop
 run = True
